@@ -34,55 +34,6 @@ class _AddStudentState extends State<AddStudent> {
   final _firestore = FirebaseFirestore.instance;
   FirebaseStorage firestorage = FirebaseStorage.instance;
 
-  //Image Picker From Gallery
-  Future getImagefromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if(pickedFile != null){
-        galleryImage = File(pickedFile.path); // path of image is here
-        selectdImageName=pickedFile.name.toString();
-      }
-      else{
-        print('No Image Selected');
-      }
-    });
-  }
-
-  uploadImage() async {
-    var uniqueKey = _firestore.collection('Student').doc(); // collection name will use
-
-    String uploadImageName =
-        DateTime.now().microsecondsSinceEpoch.toString()+ '.jpg';
-    Reference reference = firestorage.ref().child('Student').child(uploadImageName);
-    UploadTask uploadTask = reference.putFile(File(galleryImage!.path));
-    uploadTask.snapshotEvents.listen((event) {
-      print(event.bytesTransferred.toString() + "\t"+ event.totalBytes.toString());
-    });
-    await uploadTask.whenComplete(() async
-    {
-      var uploadPath = await uploadTask.snapshot.ref.getDownloadURL();
-
-      // Here will insert data into Firestore Database with URL
-
-      if(uploadPath.isNotEmpty)
-      {
-        _firestore.collection('Student').doc(uniqueKey.id)
-            .set
-          ({"image": uploadPath })
-            .then((value) => _showMessage("Post add Successfully"));
-      }
-      else{
-        _showMessage("Something went wrong");
-      }
-
-    });
-  }
-  _showMessage(String msg){
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(msg),
-        duration: Duration(seconds: 3)
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +148,7 @@ class _AddStudentState extends State<AddStudent> {
                 CustomeSizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Degree Yearr of Student',
+                    hintText: 'Enter Degree Year of Student',
                     labelText: 'Degree Year',
                     border: OutlineInputBorder(),
                   ),
@@ -216,32 +167,6 @@ class _AddStudentState extends State<AddStudent> {
                     profilepicture = value;
                   },
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    //Image From Gallery
-                    GestureDetector(
-                      onTap:(){
-                        getImagefromGallery();
-                      } ,
-                      child: const Icon(Icons.crop_original, color: Colors.lightGreen),
-                    ),
-                    Icon(Icons.photo_rounded, color: Colors.lightGreen),
-
-
-                    Icon(Icons.videocam_rounded, color: Colors.deepOrangeAccent),
-                    Icon(Icons.sentiment_satisfied_rounded, color: Colors.amberAccent,),
-                    Icon(Icons.place,color: Colors.red)
-                  ],
-                ),
-                Container(
-                  child: galleryImage == null
-                      ? Text('No Image Selected')
-                      : Image.file(galleryImage!),
-                ),
-                const SizedBox(
-                    height:20
-                ),
                 CustomeSizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
@@ -257,7 +182,6 @@ class _AddStudentState extends State<AddStudent> {
                         'DegreeYear':degreeyear,
                         'ProfilePicture':profilepicture
                       });
-                      uploadImage();
                       Navigator.pushNamed(context, MainHomeScreen.id);
                     },
                     child: Text('Save')),
