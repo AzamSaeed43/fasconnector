@@ -202,7 +202,7 @@ class _MainHomeScreenState extends State<alumni> {
             ),
             CustomeSizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection('Alumni').snapshots(),
+                stream: _firestore.collection('User').where('UserType',isEqualTo:'Alumni').snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
                     final List<DocumentSnapshot> students =
@@ -216,14 +216,13 @@ class _MainHomeScreenState extends State<alumni> {
 
                               return Card(
                                 child: ListTile(
-                                  leading: Image(image: AssetImage('assets/images/NTU.png',),),
+                                  leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        "${documentSnapshot['ProfilePicture']}"
+                                    ),
+                                    radius: 16,
+                                  ),
                                   title: Text(documentSnapshot['Name'] +
-                                      "\n" +
-                                      documentSnapshot['RegNo'] +
-                                      "\n" +
-                                      documentSnapshot['CNIC']+
-                                      "\n" +
-                                      documentSnapshot['Password'] +
                                       "\n" +
                                       documentSnapshot['Email'] +
                                       "\n" +

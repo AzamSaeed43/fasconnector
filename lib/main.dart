@@ -16,15 +16,18 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'homepage.dart';
 
+// flutter run -d chrome --web-renderer html
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: FirebaseOptions(
-        apiKey: "AIzaSyColwl5dME_ZSCQCoyq8_s2xL9v2IU4iKw",
-        projectId: "fasconnector-2e1c4",
-        messagingSenderId: "254207299018",
-        appId: "1:254207299018:web:ef1c2d274047ae067e1333",
-        storageBucket: "fasconnector-2e1c4.appspot.com/"
+          apiKey: "AIzaSyBDGhmpaM-6AJ9bcAfp2XlQMuKE4qAycFg",
+          authDomain: "fasconnector-f0ee1.firebaseapp.com",
+          projectId: "fasconnector-f0ee1",
+          storageBucket: "fasconnector-f0ee1.appspot.com",
+          messagingSenderId: "176527684531",
+          appId: "1:176527684531:web:b22d53af5cba4a252e11c6"
   ),
   );
   runApp(const Admin());

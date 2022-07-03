@@ -209,7 +209,7 @@ class _MainHomeScreenState extends State<president> {
             ),
             CustomeSizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection('President').snapshots(),
+                stream: _firestore.collection('User').where('UserType',isEqualTo: 'President').snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
                     final List<DocumentSnapshot> students =
@@ -223,14 +223,13 @@ class _MainHomeScreenState extends State<president> {
 
                               return Card(
                                 child: ListTile(
-                                  leading: Image(image: AssetImage('assets/images/NTU.png',),),
+                                  leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        "${documentSnapshot['ProfilePicture']}"
+                                    ),
+                                    radius: 16,
+                                  ),
                                   title: Text(documentSnapshot['Name'] +
-                                      "\n" +
-                                      documentSnapshot['RegNo'] +
-                                      "\n" +
-                                      documentSnapshot['CNIC']+
-                                      "\n" +
-                                      documentSnapshot['Password'] +
                                       "\n" +
                                       documentSnapshot['Email'] +
                                       "\n" +
@@ -238,7 +237,7 @@ class _MainHomeScreenState extends State<president> {
                                       "\n" +
                                       documentSnapshot['MobileNo']+
                                       "\n" +
-                                      documentSnapshot['Society']),
+                                      documentSnapshot['Position']),
                                   trailing: SizedBox(
                                     width: 100,
                                     child: Row(
