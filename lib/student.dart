@@ -20,35 +20,25 @@ class _MainHomeScreenState extends State<student> {
 
 
   final CollectionReference _students =
-  FirebaseFirestore.instance.collection('Student');
+  FirebaseFirestore.instance.collection('User');
 
 
   Future<void> _updateStudent([DocumentSnapshot? documentSnapshot]) async {
 
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _regController = TextEditingController();
-    final TextEditingController _cnicController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _addressController = TextEditingController();
     final TextEditingController _phonenoController=TextEditingController();
-    final TextEditingController _disciplineController = TextEditingController();
-    final TextEditingController _degreeyearController = TextEditingController();
     final TextEditingController _profilepictureController=TextEditingController();
 
 
     if (documentSnapshot != null) {
 
       _nameController.text = documentSnapshot['Name'];
-      _regController.text = documentSnapshot['RegNo'];
-      _cnicController.text = documentSnapshot['CNIC'];
-      _passwordController.text = documentSnapshot['Password'];
       _emailController.text = documentSnapshot['Email'];
       _addressController.text = documentSnapshot['Address'];
       _phonenoController.text=documentSnapshot['MobileNo'];
-      _disciplineController.text=documentSnapshot['Discipline'];
-      _degreeyearController.text=documentSnapshot['DegreeYear'];
       _profilepictureController.text=documentSnapshot['ProfilePicture'];
 
     }
@@ -70,20 +60,6 @@ class _MainHomeScreenState extends State<student> {
                   decoration: const InputDecoration(labelText: 'Name'),
                 ),
                 TextField(
-                  controller: _regController,
-                  decoration: const InputDecoration(
-                    labelText: 'RegNo',
-                  ),
-                ),
-                TextField(
-                  controller: _cnicController,
-                  decoration: const InputDecoration(labelText: 'CNIC'),
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                ),
-                TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -98,14 +74,6 @@ class _MainHomeScreenState extends State<student> {
                   decoration: const InputDecoration(labelText: 'MobileNo'),
                 ),
                 TextField(
-                  controller: _disciplineController,
-                  decoration: const InputDecoration(labelText: 'Discipline'),
-                ),
-                TextField(
-                  controller: _degreeyearController,
-                  decoration: const InputDecoration(labelText: 'Degree Year'),
-                ),
-                TextField(
                   controller: _profilepictureController,
                   decoration: const InputDecoration(labelText: 'Profile Picture'),
                 ),
@@ -116,45 +84,31 @@ class _MainHomeScreenState extends State<student> {
                   child: Text('Update'),
                   onPressed: () async {
                     final String? name = _nameController.text;
-                    final String? reg = _regController.text;
-                    final String? cnic=_cnicController.text;
-                    final String? password = _passwordController.text;
                     final String? email = _emailController.text;
                     final String? address=_addressController.text;
                     final String? phoneno=_phonenoController.text;
-                    final String? discipline = _disciplineController.text;
-                    final String? degreeyear=_degreeyearController.text;
                     final String? profilepicture=_profilepictureController.text;
-                    if (name != null && reg != null && cnic!=null &&
-                        password != null && email != null && address!=null && phoneno!=null
-                        && discipline!=null && degreeyear!=null && profilepicture!=null) {
+                    if (name != null  && email != null && address!=null && phoneno!=null
+                         && profilepicture!=null) {
 
                       // Update the product
                       await _students
                           .doc(documentSnapshot!.id)
                           .update({'Name': name,
-                        'RegNo': reg,
-                        'CNIC': cnic,
-                        'Password':password,
                         'Email':email,
                         'Address':address,
                         'MobileNo':phoneno,
-                        'Discipline':discipline,
-                        'DegreeYear':degreeyear,
+                        'Position':'Student',
+                        'UserType':"Student",
                         'ProfilePicture':profilepicture
                       });
 
 
                       // Clear the text fields
                       _nameController.text = '';
-                      _regController.text = '';
-                      _cnicController.text='';
-                      _passwordController.text = '';
                       _emailController.text = '';
                       _addressController.text='';
                       _phonenoController.text='';
-                      _disciplineController.text='';
-                      _degreeyearController.text='';
                       _profilepictureController.text='';
 
 
@@ -230,7 +184,9 @@ class _MainHomeScreenState extends State<student> {
                                       "\n" +
                                       documentSnapshot['Address'] +
                                       "\n" +
-                                      documentSnapshot['MobileNo']),
+                                      documentSnapshot['MobileNo']+
+                                      "\n" +
+                                      documentSnapshot['Position']),
                                   trailing: SizedBox(
                                     width: 100,
                                     child: Row(

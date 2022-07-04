@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'sizebox.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,14 +20,11 @@ class AddStudent extends StatefulWidget {
 
 class _AddStudentState extends State<AddStudent> {
   String? name;
-  String? regno;
-  String? cnic;
   String? password;
   String? email;
   String? address;
   String? mobileno;
-  String? discipline;
-  String? degreeyear;
+  String? position;
   String? profilepicture;
   File? galleryImage;
   final picker = ImagePicker();
@@ -71,23 +69,12 @@ class _AddStudentState extends State<AddStudent> {
                 CustomeSizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Registration No of Student',
-                    labelText: 'Registration No',
+                    hintText: 'Enter Email of Student',
+                    labelText: 'Email',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    regno = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter CNIC of Student',
-                    labelText: 'CNIC',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    cnic = value;
+                    email = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -104,12 +91,12 @@ class _AddStudentState extends State<AddStudent> {
                 CustomeSizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Email of Student',
-                    labelText: 'Email',
+                    hintText: 'Enter Position of Student',
+                    labelText: 'Position',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    email = value;
+                    position = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -137,28 +124,6 @@ class _AddStudentState extends State<AddStudent> {
                 CustomeSizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Discipline of Student',
-                    labelText: 'Discipline',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    discipline = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter Degree Year of Student',
-                    labelText: 'Degree Year',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    degreeyear = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
                     hintText: 'Upload Profile Picture of Student',
                     labelText: 'Profile Picture',
                     border: OutlineInputBorder(),
@@ -170,19 +135,30 @@ class _AddStudentState extends State<AddStudent> {
                 CustomeSizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
-                      _firestore.collection('Student').add({
+    try{
+    final user =  FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.toString(), password: password.toString());
+    if(user!=null){
+      var uniqueKey =
+      _firestore.collection('User').doc();
+      _firestore.collection('User').doc(uniqueKey.id).set({
                         'Name': name,
-                        'RegNo': regno,
-                        'CNIC': cnic,
-                        'Password':password,
                         'Email':email,
                         'Address':address,
                         'MobileNo':mobileno,
-                        'Discipline':discipline,
-                        'DegreeYear':degreeyear,
-                        'ProfilePicture':profilepicture
+                        'Position':position,
+                        'ProfilePicture':profilepicture,
+                        'UserType':'Student',
                       });
                       Navigator.pushNamed(context, MainHomeScreen.id);
+    }else{
+      print('Failed to add data');
+    }
+
+    } on FirebaseAuthException catch  (e) {
+      Navigator.pop(context);
+      print('Failed with error code: ${e.code}');
+      print(e.message);
+    }
                     },
                     child: Text('Save')),
               ]),

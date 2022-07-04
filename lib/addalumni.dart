@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'sizebox.dart';
 import 'package:flutter/material.dart';
 import 'mainhomescreen.dart';
@@ -15,15 +16,13 @@ class AddAlumni extends StatefulWidget {
 
 class _AddAlumniState extends State<AddAlumni> {
   String? name;
-  String? regno;
-  String? cnic;
   String? password;
   String? email;
   String? address;
   String? mobileno;
   String? companyname;
-  String? jobdescription;
   String? profilepicture;
+  String? position;
   final _firestore = FirebaseFirestore.instance;
 
   @override
@@ -62,23 +61,12 @@ class _AddAlumniState extends State<AddAlumni> {
                 CustomeSizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Registration No of Student',
-                    labelText: 'Registration No',
+                    hintText: 'Enter Email of Student',
+                    labelText: 'Email',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    regno = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter CNIC of Student',
-                    labelText: 'CNIC',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    cnic = value;
+                    email = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -90,17 +78,6 @@ class _AddAlumniState extends State<AddAlumni> {
                   ),
                   onChanged: (value) {
                     password = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter Email of Student',
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    email = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -139,12 +116,12 @@ class _AddAlumniState extends State<AddAlumni> {
                 CustomeSizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Job Description of Student',
-                    labelText: 'Job Description',
+                    hintText: 'Enter Job Position of Student',
+                    labelText: 'Job Position',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    jobdescription = value;
+                    position = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -161,19 +138,32 @@ class _AddAlumniState extends State<AddAlumni> {
                 CustomeSizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
-                      _firestore.collection('Alumni').add({
-                        'Name': name,
-                        'RegNo': regno,
-                        'CNIC': cnic,
-                        'Password':password,
-                        'Email':email,
-                        'Address':address,
-                        'MobileNo':mobileno,
-                        'CompanyName':companyname,
-                        'JobDescriptiion':jobdescription,
-                        'ProfilePicture':profilepicture
-                      });
-                      Navigator.pushNamed(context, MainHomeScreen.id);
+                      try{
+                      final user =  FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.toString(), password: password.toString());
+                      if(user!=null){
+                        var uniqueKey =
+                        _firestore.collection('User').doc();
+                        _firestore.collection('User').doc(uniqueKey.id).set({
+                          'Name': name,
+                          'Email':email,
+                          'Address':address,
+                          'MobileNo':mobileno,
+                          'CompanyName':companyname,
+                          'Position':position,
+                          'ProfilePicture':profilepicture,
+                          'UserType':'Alumni',
+                        });
+                        Navigator.pushNamed(context, MainHomeScreen.id);
+                      }else{
+                        print('Failed to add data');
+                      }
+
+                      } on FirebaseAuthException catch  (e) {
+                        Navigator.pop(context);
+                        print('Failed with error code: ${e.code}');
+                        print(e.message);
+                      }
+
                     },
                     child: Text('Save')),
               ]),

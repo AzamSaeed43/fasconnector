@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'sizebox.dart';
 import 'package:flutter/material.dart';
 import 'mainhomescreen.dart';
@@ -15,16 +16,13 @@ class AddPresident extends StatefulWidget {
 
 class _AddPresidentState extends State<AddPresident> {
   String? name;
-  String? regno;
-  String? cnic;
   String? password;
   String? email;
   String? address;
   String? mobileno;
-  String? discipline;
-  String? degreeyear;
-  String? society;
+  String? position;
   String? profilepicture;
+
 
   final _firestore = FirebaseFirestore.instance;
 
@@ -64,23 +62,12 @@ class _AddPresidentState extends State<AddPresident> {
                 CustomeSizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Registration No of Student',
-                    labelText: 'Registration No',
+                    hintText: 'Enter Email of Student',
+                    labelText: 'Email',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    regno = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter CNIC of Student',
-                    labelText: 'CNIC',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    cnic = value;
+                    email = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -92,17 +79,6 @@ class _AddPresidentState extends State<AddPresident> {
                   ),
                   onChanged: (value) {
                     password = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter Email of Student',
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    email = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -128,28 +104,7 @@ class _AddPresidentState extends State<AddPresident> {
                   },
                 ),
                 CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter Discipline of Student',
-                    labelText: 'Discipline',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    discipline = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter Degree Year of Student',
-                    labelText: 'Degree Year',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    degreeyear = value;
-                  },
-                ),
-                CustomeSizedBox(height: 20),
+
                 TextField(
                   decoration: InputDecoration(
                     hintText: 'Enter Society Name',
@@ -157,7 +112,7 @@ class _AddPresidentState extends State<AddPresident> {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    society = value;
+                    position = value;
                   },
                 ),
                 CustomeSizedBox(height: 20),
@@ -174,20 +129,30 @@ class _AddPresidentState extends State<AddPresident> {
                 CustomeSizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
-                      _firestore.collection('President').add({
-                        'Name': name,
-                        'RegNo': regno,
-                        'CNIC': cnic,
-                        'Password':password,
-                        'Email':email,
-                        'Address':address,
-                        'MobileNo':mobileno,
-                        'Society':society,
-                        'Discipline':discipline,
-                        'DegreeYear':degreeyear,
-                        'ProfilePicture':profilepicture
-                      });
-                      Navigator.pushNamed(context, MainHomeScreen.id);
+    try{
+    final user =  FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.toString(), password: password.toString());
+    if(user!=null){
+      var uniqueKey =
+      _firestore.collection('User').doc();
+      _firestore.collection('User').doc(uniqueKey.id).set({
+    'Name': name,
+    'Email':email,
+    'Address':address,
+    'MobileNo':mobileno,
+    'Position':position,
+    'ProfilePicture':profilepicture,
+    'UserType':'President',
+    });
+    Navigator.pushNamed(context, MainHomeScreen.id);
+    }else{
+      print('Failed to add data');
+    }
+
+    } on FirebaseAuthException catch  (e) {
+      Navigator.pop(context);
+      print('Failed with error code: ${e.code}');
+      print(e.message);
+    }
                     },
                     child: Text('Save')),
               ]),

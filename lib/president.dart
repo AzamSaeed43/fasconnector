@@ -19,20 +19,15 @@ class _MainHomeScreenState extends State<president> {
   // For President
 
   final CollectionReference _president =
-  FirebaseFirestore.instance.collection('President');
+  FirebaseFirestore.instance.collection('User');
 
   Future<void> _updatePresident([DocumentSnapshot? documentSnapshot]) async {
 
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _regController = TextEditingController();
-    final TextEditingController _cnicController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _addressController = TextEditingController();
     final TextEditingController _phonenoController=TextEditingController();
-    final TextEditingController _disciplineController = TextEditingController();
-    final TextEditingController _degreeyearController = TextEditingController();
     final TextEditingController _societyController=TextEditingController();
     final TextEditingController _profilepictureController=TextEditingController();
 
@@ -40,15 +35,10 @@ class _MainHomeScreenState extends State<president> {
     if (documentSnapshot != null) {
 
       _nameController.text = documentSnapshot['Name'];
-      _regController.text = documentSnapshot['RegNo'];
-      _cnicController.text = documentSnapshot['CNIC'];
-      _passwordController.text = documentSnapshot['Password'];
       _emailController.text = documentSnapshot['Email'];
       _addressController.text = documentSnapshot['Address'];
       _phonenoController.text=documentSnapshot['MobileNo'];
-      _disciplineController.text=documentSnapshot['Discipline'];
-      _degreeyearController.text=documentSnapshot['DegreeYear'];
-      _societyController.text=documentSnapshot['Society'];
+      _societyController.text=documentSnapshot['Position'];
       _profilepictureController.text=documentSnapshot['ProfilePicture'];
 
     }
@@ -70,20 +60,6 @@ class _MainHomeScreenState extends State<president> {
                   decoration: const InputDecoration(labelText: 'Name'),
                 ),
                 TextField(
-                  controller: _regController,
-                  decoration: const InputDecoration(
-                    labelText: 'RegNo',
-                  ),
-                ),
-                TextField(
-                  controller: _cnicController,
-                  decoration: const InputDecoration(labelText: 'CNIC'),
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                ),
-                TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -96,14 +72,6 @@ class _MainHomeScreenState extends State<president> {
                 TextField(
                   controller: _phonenoController,
                   decoration: const InputDecoration(labelText: 'MobileNo'),
-                ),
-                TextField(
-                  controller: _disciplineController,
-                  decoration: const InputDecoration(labelText: 'Discipline'),
-                ),
-                TextField(
-                  controller: _degreeyearController,
-                  decoration: const InputDecoration(labelText: 'Degree Year'),
                 ),
                 TextField(
                   controller: _societyController,
@@ -120,47 +88,32 @@ class _MainHomeScreenState extends State<president> {
                   child: Text('Update'),
                   onPressed: () async {
                     final String? name = _nameController.text;
-                    final String? reg = _regController.text;
-                    final String? cnic=_cnicController.text;
-                    final String? password = _passwordController.text;
                     final String? email = _emailController.text;
                     final String? address=_addressController.text;
                     final String? phoneno=_phonenoController.text;
-                    final String? discipline = _disciplineController.text;
-                    final String? degreeyear=_degreeyearController.text;
                     final String? society=_societyController.text;
                     final String? profilepicture=_profilepictureController.text;
-                    if (name != null && reg != null && cnic!=null &&
-                        password != null && email != null && address!=null && phoneno!=null
-                        && discipline!=null && degreeyear!=null && society!=null  && profilepicture!=null) {
+                    if (name != null && email != null && address!=null && phoneno!=null
+                         && society!=null  && profilepicture!=null) {
 
                       // Update the product
                       await _president
                           .doc(documentSnapshot!.id)
                           .update({'Name': name,
-                        'RegNo': reg,
-                        'CNIC': cnic,
-                        'Password':password,
                         'Email':email,
                         'Address':address,
                         'MobileNo':phoneno,
-                        'Discipline':discipline,
-                        'DegreeYear':degreeyear,
-                        'Society':society,
-                        'ProfilePicture':profilepicture
+                        'Position':society,
+                        'ProfilePicture':profilepicture,
+                        'UserType':'President'
                       });
 
 
                       // Clear the text fields
                       _nameController.text = '';
-                      _regController.text = '';
-                      _cnicController.text='';
-                      _passwordController.text = '';
                       _emailController.text = '';
                       _addressController.text='';
                       _phonenoController.text='';
-                      _disciplineController.text='';
-                      _degreeyearController.text='';
                       _societyController.text='';
                       _profilepictureController.text='';
 

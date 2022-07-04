@@ -40,6 +40,7 @@ dependencies:
   firebase_storage: ^9.0.0
   image_picker: ^0.8.4+10
 
+
 dependency_overrides:
   firebase_messaging_platform_interface: 3.1.6
   firebase_storage_platform_interface: 4.0.14

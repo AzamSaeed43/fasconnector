@@ -21,16 +21,13 @@ class _MainHomeScreenState extends State<alumni> {
 
 
   final CollectionReference _alumni =
-  FirebaseFirestore.instance.collection('Alumni');
+  FirebaseFirestore.instance.collection('User');
 
 
   Future<void> _updateAlumni([DocumentSnapshot? documentSnapshot]) async {
 
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _regController = TextEditingController();
-    final TextEditingController _cnicController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _addressController = TextEditingController();
     final TextEditingController _phonenoController=TextEditingController();
@@ -41,14 +38,11 @@ class _MainHomeScreenState extends State<alumni> {
     if (documentSnapshot != null) {
 
       _nameController.text = documentSnapshot['Name'];
-      _regController.text = documentSnapshot['RegNo'];
-      _cnicController.text = documentSnapshot['CNIC'];
-      _passwordController.text = documentSnapshot['Password'];
       _emailController.text = documentSnapshot['Email'];
       _addressController.text = documentSnapshot['Address'];
       _phonenoController.text=documentSnapshot['MobileNo'];
       _companynameController.text=documentSnapshot['CompanyName'];
-      _jobdescriptionController.text=documentSnapshot['JobDescription'];
+      _jobdescriptionController.text=documentSnapshot['Position'];
       _profilepictureController.text=documentSnapshot['ProfilePicture'];
 
     }
@@ -70,20 +64,6 @@ class _MainHomeScreenState extends State<alumni> {
                   decoration: const InputDecoration(labelText: 'Name'),
                 ),
                 TextField(
-                  controller: _regController,
-                  decoration: const InputDecoration(
-                    labelText: 'RegNo',
-                  ),
-                ),
-                TextField(
-                  controller: _cnicController,
-                  decoration: const InputDecoration(labelText: 'CNIC'),
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                ),
-                TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -103,7 +83,7 @@ class _MainHomeScreenState extends State<alumni> {
                 ),
                 TextField(
                   controller: _jobdescriptionController,
-                  decoration: const InputDecoration(labelText: 'Job Description'),
+                  decoration: const InputDecoration(labelText: 'Job Position'),
                 ),
                 TextField(
                   controller: _profilepictureController,
@@ -116,40 +96,31 @@ class _MainHomeScreenState extends State<alumni> {
                   child: Text('Update'),
                   onPressed: () async {
                     final String? name = _nameController.text;
-                    final String? reg = _regController.text;
-                    final String? cnic=_cnicController.text;
-                    final String? password = _passwordController.text;
                     final String? email = _emailController.text;
                     final String? address=_addressController.text;
                     final String? phoneno=_phonenoController.text;
                     final String? companyname = _companynameController.text;
                     final String? jobdescription=_jobdescriptionController.text;
                     final String? profilepicture=_profilepictureController.text;
-                    if (name != null && reg != null && cnic!=null &&
-                        password != null && email != null && address!=null && phoneno!=null
+                    if (name != null  && email != null && address!=null && phoneno!=null
                         && companyname!=null && jobdescription!=null && profilepicture!=null) {
 
                       // Update the product
                       await _alumni
                           .doc(documentSnapshot!.id)
                           .update({'Name': name,
-                        'RegNo': reg,
-                        'CNIC': cnic,
-                        'Password':password,
                         'Email':email,
                         'Address':address,
                         'MobileNo':phoneno,
                         'CompanyName':companyname,
-                        'JobDescription':jobdescription,
-                        'ProfilePicture':profilepicture
+                        'Position':jobdescription,
+                        'ProfilePicture':profilepicture,
+                        'UserType':'Alumni',
                       });
 
 
                       // Clear the text fields
                       _nameController.text = '';
-                      _regController.text = '';
-                      _cnicController.text='';
-                      _passwordController.text = '';
                       _emailController.text = '';
                       _addressController.text='';
                       _phonenoController.text='';
@@ -230,7 +201,9 @@ class _MainHomeScreenState extends State<alumni> {
                                       "\n" +
                                       documentSnapshot['MobileNo']+
                                       "\n" +
-                                      documentSnapshot['CompanyName']),
+                                      documentSnapshot['CompanyName']+
+                                      "\n" +
+                                      documentSnapshot['Position']),
                                   trailing: SizedBox(
                                     width: 100,
                                     child: Row(

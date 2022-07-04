@@ -18,23 +18,18 @@ class _MainHomeScreenState extends State<teacher> {
 
   // For Teacher
   final CollectionReference _teacher =
-  FirebaseFirestore.instance.collection('Teacher');
+  FirebaseFirestore.instance.collection('User');
 
-  Future<void> _updateTeacher([DocumentSnapshot? documentSnapshot]) async {
+  Future<void> _updateTeacher(DocumentSnapshot? documentSnapshot) async {
 
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
     final TextEditingController _qualificationController = TextEditingController();
-    final TextEditingController _cnicController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _addressController = TextEditingController();
     final TextEditingController _phonenoController=TextEditingController();
     final TextEditingController _officenoController = TextEditingController();
-    final TextEditingController _faxnoController = TextEditingController();
-    final TextEditingController _gradeController=TextEditingController();
     final TextEditingController _positionController=TextEditingController();
-    final TextEditingController _biographyController = TextEditingController();
     final TextEditingController _timetableController = TextEditingController();
     final TextEditingController _profilepictureController=TextEditingController();
 
@@ -43,16 +38,11 @@ class _MainHomeScreenState extends State<teacher> {
 
       _nameController.text = documentSnapshot['Name'];
       _qualificationController.text = documentSnapshot['Qualification'];
-      _cnicController.text = documentSnapshot['CNIC'];
-      _passwordController.text = documentSnapshot['Password'];
       _emailController.text = documentSnapshot['Email'];
       _addressController.text = documentSnapshot['Address'];
-      _phonenoController.text=documentSnapshot['PhoneNo'];
+      _phonenoController.text=documentSnapshot['MobileNo'];
       _officenoController.text=documentSnapshot['OfficeNo'];
-      _faxnoController.text=documentSnapshot['Fax'];
-      _gradeController.text=documentSnapshot['Grade'];
       _positionController.text=documentSnapshot['Position'];
-      _biographyController.text=documentSnapshot['Biography'];
       _timetableController.text=documentSnapshot['TimeTable'];
       _profilepictureController.text=documentSnapshot['ProfilePicture'];
 
@@ -81,14 +71,6 @@ class _MainHomeScreenState extends State<teacher> {
                   ),
                 ),
                 TextField(
-                  controller: _cnicController,
-                  decoration: const InputDecoration(labelText: 'CNIC'),
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                ),
-                TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -100,29 +82,16 @@ class _MainHomeScreenState extends State<teacher> {
                 ),
                 TextField(
                   controller: _phonenoController,
-                  decoration: const InputDecoration(labelText: 'Phone NO'),
+                  decoration: const InputDecoration(labelText: 'Mobile No'),
                 ),
                 TextField(
                   controller: _officenoController,
                   decoration: const InputDecoration(labelText: 'Office No'),
                 ),
                 TextField(
-                  controller: _faxnoController,
-                  decoration: const InputDecoration(labelText: 'Fax'),
-                ),
-                TextField(
-                  controller: _gradeController,
-                  decoration: const InputDecoration(labelText: 'Grade'),
-                ),
-                TextField(
                   controller: _positionController,
                   decoration: const InputDecoration(labelText: 'Posiition'),
                 ),
-                TextField(
-                  controller: _biographyController,
-                  decoration: const InputDecoration(labelText: 'Biography'),
-                ),
-
                 TextField(
                   controller: _profilepictureController,
                   decoration: const InputDecoration(labelText: 'Profile Picture'),
@@ -139,56 +108,41 @@ class _MainHomeScreenState extends State<teacher> {
                   onPressed: () async {
                     final String? name = _nameController.text;
                     final String? qualification = _qualificationController.text;
-                    final String? cnic=_cnicController.text;
-                    final String? password = _passwordController.text;
                     final String? email = _emailController.text;
                     final String? address=_addressController.text;
                     final String? phoneno=_phonenoController.text;
                     final String? officeno=_officenoController.text;
-                    final String? faxno=_faxnoController.text;
-                    final String? biography = _biographyController.text;
-                    final String? grade=_gradeController.text;
                     final String? position=_positionController.text;
                     final String? profilepicture=_profilepictureController.text;
                     final String? timetable=_timetableController.text;
 
-                    if (name != null && qualification != null && cnic!=null &&
-                        password != null && email != null && address!=null && phoneno!=null
-                        && officeno!=null && faxno!=null && biography!=null  && profilepicture!=null
-                        && grade!=null && position!=null && timetable!=null) {
+                    if (name != null && qualification != null && email != null && address!=null && phoneno!=null
+                        && officeno!=null   && profilepicture!=null
+                         && position!=null && timetable!=null) {
 
                       // Update the product
                       await _teacher
                           .doc(documentSnapshot!.id)
                           .update({'Name': name,
                         'Qualification': qualification,
-                        'CNIC': cnic,
-                        'Password':password,
                         'Email':email,
                         'Address':address,
-                        'PhoneNo':phoneno,
+                        'MobileNo':phoneno,
                         'OfficeNo':officeno,
-                        'Fax':faxno,
-                        'Grade':grade,
-                        'Biography':biography,
                         'Position':position,
                         'TimeTable':timetable,
-                        'ProfilePicture':profilepicture
+                        'ProfilePicture':profilepicture,
+                        'UserType':'Teacher',
                       });
 
 
                       // Clear the text fields
                       _nameController.text = '';
                       _qualificationController.text = '';
-                      _cnicController.text='';
-                      _passwordController.text = '';
                       _emailController.text = '';
                       _addressController.text='';
                       _phonenoController.text='';
                       _officenoController.text='';
-                      _faxnoController.text='';
-                      _biographyController.text='';
-                      _gradeController.text='';
                       _positionController.text='';
                       _timetableController.text='';
                       _profilepictureController.text='';
@@ -252,7 +206,6 @@ class _MainHomeScreenState extends State<teacher> {
                               return Card(
                                 child: ListTile(
                                   leading: CircleAvatar(
-
                                     backgroundImage: NetworkImage(
                                         "${documentSnapshot['ProfilePicture']}"
                                     ),
@@ -266,7 +219,11 @@ class _MainHomeScreenState extends State<teacher> {
                                       "\n" +
                                       documentSnapshot['Address'] +
                                       "\n" +
-                                      documentSnapshot['MobileNo']),
+                                      documentSnapshot['MobileNo']+
+                                      "\n" +
+                                      documentSnapshot['OfficeNo']+
+                                      "\n" +
+                                      documentSnapshot['Position']),
                                   trailing: SizedBox(
                                     width: 100,
                                     child: Row(
