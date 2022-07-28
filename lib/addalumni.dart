@@ -151,6 +151,7 @@ class _AddAlumniState extends State<AddAlumni> {
                           'CompanyName':companyname,
                           'Position':position,
                           'ProfilePicture':profilepicture,
+                          'ID':uniqueKey.id.toString(),
                           'UserType':'Alumni',
                         });
                         Navigator.pushNamed(context, MainHomeScreen.id);

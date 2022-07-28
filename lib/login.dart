@@ -1,20 +1,87 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'mainhomescreen.dart';
 import 'sizebox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'Dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
   static String id = 'LoginPage';
+  static Map<String,dynamic>? user;
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? email;
-  String? password;
-  final _uth = FirebaseAuth.instance;
+  String? Email;
+  String? Password;
+  String ErrorMsg = "";
+  final _formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+
+  getData() async {
+    String? Admin;
+    Map<String, dynamic>? dataEmail;
+
+    CollectionReference admin=FirebaseFirestore.instance.collection("Admin");
+
+    await admin.where('Email', isEqualTo: '$Email')
+        .get().then((value) => value.docs.forEach((element) {
+      print(element.data());
+      print("--------------------");
+      dataEmail=element.data() as Map<String, dynamic>?;
+      LoginScreen.user=dataEmail;
+      Admin=dataEmail?['Email'];
+      print(dataEmail?['Email']);
+
+    }));
+
+    if(Admin != null){
+      print("Login ${Admin.toString()} as Admin");
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainHomeScreen()));
+    } else
+    {
+      Navigator.pop(context);
+      print("Error in logining");
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error in Logining Plz Try Again"), duration: Duration(seconds: 3)));
+    }
+  }
+
+  void _trySubmitForm() async {
+    showDialog(context: context, builder: (c){
+      return LoadingDialog(
+        message: "Logging....",
+      );
+    });
+      try {
+        final user = await _auth.signInWithEmailAndPassword(
+            email: Email.toString(), password: Password.toString());
+        if (user != null) {
+          getData();
+
+        } else {
+          Navigator.pop(context);
+          setState(() {
+            ErrorMsg = 'Enter correct username and password';
+          });
+        }
+      } on FirebaseAuthException catch  (e) {
+        Navigator.pop(context);
+        print('Failed with error code: ${e.code}');
+        print(e.message);
+      }
+
+      /*
+      Continute proccessing the provided information with your own logic
+      such us sending HTTP requests, savaing to SQLite database, etc.
+      */
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (enteredEmail) {
-                  email = enteredEmail;
+                  Email = enteredEmail;
                 },
               ),
               const SizedBox(height: 20),
@@ -66,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (enteredPassword) {
-                  password = enteredPassword;
+                  Password = enteredPassword;
                 },
               ),
               const SizedBox(height: 20),
@@ -74,15 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 40,
                 width: 320,
                 child: ElevatedButton(
-                    onPressed: () async {
-                      UserCredential user =
-                          await _uth.signInWithEmailAndPassword(
-                              email: email.toString(),
-                              password: password.toString());
-                      if (user != null) {
-                        Navigator.pushNamed(context, MainHomeScreen.id);
-                      }
-                    },
+                    onPressed: _trySubmitForm,
                     child: Text(
                       'Login',
                       style: TextStyle(fontSize: 17),

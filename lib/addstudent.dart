@@ -147,6 +147,7 @@ class _AddStudentState extends State<AddStudent> {
                         'MobileNo':mobileno,
                         'Position':position,
                         'ProfilePicture':profilepicture,
+        'ID':uniqueKey.id.toString(),
                         'UserType':'Student',
                       });
                       Navigator.pushNamed(context, MainHomeScreen.id);

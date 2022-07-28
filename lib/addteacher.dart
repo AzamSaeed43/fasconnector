@@ -177,6 +177,7 @@ class _AddTeacherState extends State<AddTeacher> {
                         'OfficeNo':officeno,
                         'Position':position,
                       'ProfilePicture':profilepicture,
+                        'ID':uniqueKey.id.toString(),
                       'TimeTable':timetable,
                         'UserType':'Teacher',
                       });

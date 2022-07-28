@@ -141,6 +141,7 @@ class _AddPresidentState extends State<AddPresident> {
     'MobileNo':mobileno,
     'Position':position,
     'ProfilePicture':profilepicture,
+        'ID':uniqueKey.id.toString(),
     'UserType':'President',
     });
     Navigator.pushNamed(context, MainHomeScreen.id);

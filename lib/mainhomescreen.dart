@@ -1,19 +1,23 @@
+import 'package:flutter_admin_web/admin.dart';
 import 'package:flutter_admin_web/drawer.dart';
 import 'sizebox.dart';
 import 'student.dart';
 import 'teacher.dart';
 import 'alumni.dart';
 import 'president.dart';
+import 'announcement.dart';
+import 'admin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MainHomeScreen extends StatefulWidget {
-  const MainHomeScreen({Key? key}) : super(key: key);
+  MainHomeScreen({Key? key}) : super(key: key);
   static String id = 'MainHomeScreen';
 
   @override
   _MainHomeScreenState createState() => _MainHomeScreenState();
+
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
@@ -84,6 +88,31 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               ),
             ),
             CustomeSizedBox(height: 20),
+            Container(
+              height: 50,
+              color: Colors.teal,
+              child: FlatButton(
+                onPressed: (){
+                  Navigator.pushNamed(context, Admins.id);
+                },
+                child: Center(
+                  child: Text("Admins"),
+                ),
+              ),
+            ),
+            CustomeSizedBox(height: 20),
+            Container(
+              height: 50,
+              color: Colors.teal,
+              child: FlatButton(
+                onPressed: (){
+                  Navigator.pushNamed(context, announcement.id);
+                },
+                child: Center(
+                  child: Text("Announcements"),
+                ),
+              ),
+            ),
           ],
         ),
       ),

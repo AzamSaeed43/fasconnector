@@ -11,6 +11,10 @@ import 'student.dart';
 import 'teacher.dart';
 import 'alumni.dart';
 import 'president.dart';
+import 'addadmin.dart';
+import 'admin.dart';
+import 'addannouncement.dart';
+import 'announcement.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -43,7 +47,7 @@ class Admin extends StatelessWidget {
       routes: {
         LoginScreen.id: (context) => const LoginScreen(),
         RegisterScreen.id: (context) => const RegisterScreen(),
-        MainHomeScreen.id: (context) => const MainHomeScreen(),
+        MainHomeScreen.id: (context) => MainHomeScreen(),
         AddStudent.id: (context) => const AddStudent(),
         AddAlumni.id:(context) => const AddAlumni(),
         AddPresident.id:(context) => const AddPresident(),
@@ -51,7 +55,11 @@ class Admin extends StatelessWidget {
         student.id:(context)=>const student(),
         teacher.id:(context)=>const teacher(),
         alumni.id:(context)=>const alumni(),
-        president.id:(context)=>const president()
+        president.id:(context)=>const president(),
+        announcement.id:(context)=>const announcement(),
+        AddAnnoucement.id:(context)=>const AddAnnoucement(),
+        AddAdmin.id:(context)=>const AddAdmin(),
+        Admins.id:(context)=>const Admins(),
 
       },
       theme: ThemeData(
