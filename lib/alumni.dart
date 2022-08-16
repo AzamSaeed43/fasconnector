@@ -15,36 +15,32 @@ class alumni extends StatefulWidget {
 class _MainHomeScreenState extends State<alumni> {
   final _firestore = FirebaseFirestore.instance;
 
-
   // For Alumni
 
-
-
   final CollectionReference _alumni =
-  FirebaseFirestore.instance.collection('User');
-
+      FirebaseFirestore.instance.collection('User');
 
   Future<void> _updateAlumni([DocumentSnapshot? documentSnapshot]) async {
-
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _addressController = TextEditingController();
-    final TextEditingController _phonenoController=TextEditingController();
-    final TextEditingController _companynameController = TextEditingController();
-    final TextEditingController _jobdescriptionController = TextEditingController();
-    final TextEditingController _profilepictureController=TextEditingController();
+    final TextEditingController _phonenoController = TextEditingController();
+    final TextEditingController _companynameController =
+        TextEditingController();
+    final TextEditingController _jobdescriptionController =
+        TextEditingController();
+    final TextEditingController _profilepictureController =
+        TextEditingController();
 
     if (documentSnapshot != null) {
-
       _nameController.text = documentSnapshot['Name'];
       _emailController.text = documentSnapshot['Email'];
       _addressController.text = documentSnapshot['Address'];
-      _phonenoController.text=documentSnapshot['MobileNo'];
-      _companynameController.text=documentSnapshot['CompanyName'];
-      _jobdescriptionController.text=documentSnapshot['Position'];
-      _profilepictureController.text=documentSnapshot['ProfilePicture'];
-
+      _phonenoController.text = documentSnapshot['MobileNo'];
+      _companynameController.text = documentSnapshot['CompanyName'];
+      _jobdescriptionController.text = documentSnapshot['Position'];
+      _profilepictureController.text = documentSnapshot['ProfilePicture'];
     }
 
     await showModalBottomSheet(
@@ -87,47 +83,51 @@ class _MainHomeScreenState extends State<alumni> {
                 ),
                 TextField(
                   controller: _profilepictureController,
-                  decoration: const InputDecoration(labelText: 'Profile Picture'),
+                  decoration:
+                      const InputDecoration(labelText: 'Profile Picture'),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
-                  child: Text('Update'),
+                  child: const Text('Update'),
                   onPressed: () async {
                     final String? name = _nameController.text;
                     final String? email = _emailController.text;
-                    final String? address=_addressController.text;
-                    final String? phoneno=_phonenoController.text;
+                    final String? address = _addressController.text;
+                    final String? phoneno = _phonenoController.text;
                     final String? companyname = _companynameController.text;
-                    final String? jobdescription=_jobdescriptionController.text;
-                    final String? profilepicture=_profilepictureController.text;
-                    if (name != null  && email != null && address!=null && phoneno!=null
-                        && companyname!=null && jobdescription!=null && profilepicture!=null) {
-
+                    final String? jobdescription =
+                        _jobdescriptionController.text;
+                    final String? profilepicture =
+                        _profilepictureController.text;
+                    if (name != null &&
+                        email != null &&
+                        address != null &&
+                        phoneno != null &&
+                        companyname != null &&
+                        jobdescription != null &&
+                        profilepicture != null) {
                       // Update the product
-                      await _alumni
-                          .doc(documentSnapshot!.id)
-                          .update({'Name': name,
-                        'Email':email,
-                        'Address':address,
-                        'MobileNo':phoneno,
-                        'CompanyName':companyname,
-                        'Position':jobdescription,
-                        'ProfilePicture':profilepicture,
-                        'UserType':'Alumni',
+                      await _alumni.doc(documentSnapshot!.id).update({
+                        'Name': name,
+                        'Email': email,
+                        'Address': address,
+                        'MobileNo': phoneno,
+                        'CompanyName': companyname,
+                        'Position': jobdescription,
+                        'ProfilePicture': profilepicture,
+                        'UserType': 'Alumni',
                       });
-
 
                       // Clear the text fields
                       _nameController.text = '';
                       _emailController.text = '';
-                      _addressController.text='';
-                      _phonenoController.text='';
-                      _companynameController.text='';
-                      _jobdescriptionController.text='';
-                      _profilepictureController.text='';
-
+                      _addressController.text = '';
+                      _phonenoController.text = '';
+                      _companynameController.text = '';
+                      _jobdescriptionController.text = '';
+                      _profilepictureController.text = '';
 
                       // Hide the bottom sheet
                       Navigator.of(context).pop();
@@ -148,9 +148,6 @@ class _MainHomeScreenState extends State<alumni> {
         content: Text('You have successfully deleted a Alumni Record')));
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,30 +164,30 @@ class _MainHomeScreenState extends State<alumni> {
               width: 500,
               height: 50,
               color: Colors.teal,
-              child: Center(
-                  child: Text("Display Alumni Students")
-              ),
+              child: Center(child: Text("Display Alumni Students")),
             ),
             CustomeSizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection('User').where('UserType',isEqualTo:'Alumni').snapshots(),
+                stream: _firestore
+                    .collection('User')
+                    .where('UserType', isEqualTo: 'Alumni')
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
-                    final List<DocumentSnapshot> students =
-                        snapshot.data!.docs;
+                    final List<DocumentSnapshot> students = snapshot.data!.docs;
 
                     return Expanded(
                         child: ListView.builder(
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
-                              final DocumentSnapshot documentSnapshot = snapshot.data!.docs[index];
+                              final DocumentSnapshot documentSnapshot =
+                                  snapshot.data!.docs[index];
 
                               return Card(
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
-                                        "${documentSnapshot['ProfilePicture']}"
-                                    ),
+                                        "${documentSnapshot['ProfilePicture']}"),
                                     radius: 16,
                                   ),
                                   title: Text(documentSnapshot['Name'] +
@@ -199,9 +196,9 @@ class _MainHomeScreenState extends State<alumni> {
                                       "\n" +
                                       documentSnapshot['Address'] +
                                       "\n" +
-                                      documentSnapshot['MobileNo']+
+                                      documentSnapshot['MobileNo'] +
                                       "\n" +
-                                      documentSnapshot['CompanyName']+
+                                      documentSnapshot['CompanyName'] +
                                       "\n" +
                                       documentSnapshot['Position']),
                                   trailing: SizedBox(
@@ -227,9 +224,7 @@ class _MainHomeScreenState extends State<alumni> {
                                   ),
                                 ),
                               );
-                            }
-                        )
-                    );
+                            }));
                   } else {
                     return Text('Error');
                   }

@@ -15,23 +15,18 @@ class announcement extends StatefulWidget {
 class _announcementScreenState extends State<announcement> {
   final _firestore = FirebaseFirestore.instance;
 
-
-
   final CollectionReference _announcement =
-  FirebaseFirestore.instance.collection('Announcement');
-
+      FirebaseFirestore.instance.collection('Announcement');
 
   Future<void> _updateannouncement([DocumentSnapshot? documentSnapshot]) async {
-
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _profilepictureController=TextEditingController();
+    final TextEditingController _profilepictureController =
+        TextEditingController();
 
     if (documentSnapshot != null) {
-
       _nameController.text = documentSnapshot['EventName'];
-      _profilepictureController.text=documentSnapshot['EventPic'];
-
+      _profilepictureController.text = documentSnapshot['EventPic'];
     }
 
     await showModalBottomSheet(
@@ -61,18 +56,17 @@ class _announcementScreenState extends State<announcement> {
                   child: Text('Update'),
                   onPressed: () async {
                     final String? name = _nameController.text;
-                    final String? profilepicture=_profilepictureController.text;
-                    if (name != null  && profilepicture!=null) {
-
+                    final String? profilepicture =
+                        _profilepictureController.text;
+                    if (name != null && profilepicture != null) {
                       // Update the product
-                      await _announcement
-                          .doc(documentSnapshot!.id)
-                          .update({'EventName': name,
-                        'EventPic':profilepicture,
+                      await _announcement.doc(documentSnapshot!.id).update({
+                        'EventName': name,
+                        'EventPic': profilepicture,
                       });
                       // Clear the text fields
                       _nameController.text = '';
-                      _profilepictureController.text='';
+                      _profilepictureController.text = '';
 
                       // Hide the bottom sheet
                       Navigator.of(context).pop();
@@ -93,9 +87,6 @@ class _announcementScreenState extends State<announcement> {
         content: Text('You have successfully deleted a Event Record')));
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,30 +103,28 @@ class _announcementScreenState extends State<announcement> {
               width: 500,
               height: 50,
               color: Colors.teal,
-              child: Center(
-                  child: Text("Display Upcoming Event(Announcement)")
-              ),
+              child:
+                  Center(child: Text("Display Upcoming Event(Announcement)")),
             ),
             CustomeSizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
                 stream: _firestore.collection('Announcement').snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
-                    final List<DocumentSnapshot> students =
-                        snapshot.data!.docs;
+                    final List<DocumentSnapshot> students = snapshot.data!.docs;
 
                     return Expanded(
                         child: ListView.builder(
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
-                              final DocumentSnapshot documentSnapshot = snapshot.data!.docs[index];
+                              final DocumentSnapshot documentSnapshot =
+                                  snapshot.data!.docs[index];
 
                               return Card(
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
-                                        "${documentSnapshot['EventPic']}"
-                                    ),
+                                        "${documentSnapshot['EventPic']}"),
                                     radius: 16,
                                   ),
                                   title: Text(documentSnapshot['EventName']),
@@ -147,14 +136,16 @@ class _announcementScreenState extends State<announcement> {
                                         IconButton(
                                           icon: const Icon(Icons.edit),
                                           onPressed: () {
-                                            _updateannouncement(documentSnapshot);
+                                            _updateannouncement(
+                                                documentSnapshot);
                                           },
                                         ),
                                         // This icon button is used to delete a single product
                                         IconButton(
                                           icon: const Icon(Icons.delete),
                                           onPressed: () {
-                                            _deleteannouncement(documentSnapshot.id);
+                                            _deleteannouncement(
+                                                documentSnapshot.id);
                                           },
                                         )
                                       ],
@@ -162,9 +153,7 @@ class _announcementScreenState extends State<announcement> {
                                   ),
                                 ),
                               );
-                            }
-                        )
-                    );
+                            }));
                   } else {
                     return Text('Error');
                   }

@@ -4,35 +4,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Admins extends StatefulWidget {
-  const Admins({Key? key}) : super(key: key);
-  static String id = 'Admin';
+class post extends StatefulWidget {
+  const post({Key? key}) : super(key: key);
+  static String id = 'post';
 
   @override
-  _AdminsScreenState createState() => _AdminsScreenState();
+  _postScreenState createState() => _postScreenState();
 }
 
-class _AdminsScreenState extends State<Admins> {
+class _postScreenState extends State<post> {
   final _firestore = FirebaseFirestore.instance;
 
-  final CollectionReference _Admin =
-      FirebaseFirestore.instance.collection('Admin');
+  final CollectionReference _post =
+  FirebaseFirestore.instance.collection('post');
 
-  Future<void> _updateAdmin([DocumentSnapshot? documentSnapshot]) async {
+  Future<void> _updateannouncement([DocumentSnapshot? documentSnapshot]) async {
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _addressController = TextEditingController();
-    final TextEditingController _phonenoController = TextEditingController();
     final TextEditingController _profilepictureController =
-        TextEditingController();
+    TextEditingController();
 
     if (documentSnapshot != null) {
-      _nameController.text = documentSnapshot['Name'];
-      _emailController.text = documentSnapshot['Email'];
-      _addressController.text = documentSnapshot['Address'];
-      _phonenoController.text = documentSnapshot['MobileNo'];
-      _profilepictureController.text = documentSnapshot['ProfilePicture'];
+      _nameController.text = documentSnapshot['title'];
+      _profilepictureController.text = documentSnapshot['image'];
     }
 
     await showModalBottomSheet(
@@ -49,26 +43,11 @@ class _AdminsScreenState extends State<Admins> {
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                  ),
-                ),
-                TextField(
-                  controller: _addressController,
-                  decoration: const InputDecoration(labelText: 'Address'),
-                ),
-                TextField(
-                  controller: _phonenoController,
-                  decoration: const InputDecoration(labelText: 'MobileNo'),
+                  decoration: const InputDecoration(labelText: 'Title'),
                 ),
                 TextField(
                   controller: _profilepictureController,
-                  decoration:
-                      const InputDecoration(labelText: 'Profile Picture URL'),
+                  decoration: const InputDecoration(labelText: 'Image URL'),
                 ),
                 const SizedBox(
                   height: 20,
@@ -77,30 +56,16 @@ class _AdminsScreenState extends State<Admins> {
                   child: Text('Update'),
                   onPressed: () async {
                     final String? name = _nameController.text;
-                    final String? email = _emailController.text;
-                    final String? address = _addressController.text;
-                    final String? phoneno = _phonenoController.text;
                     final String? profilepicture =
                         _profilepictureController.text;
-                    if (name != null &&
-                        email != null &&
-                        address != null &&
-                        phoneno != null &&
-                        profilepicture != null) {
+                    if (name != null && profilepicture != null) {
                       // Update the product
-                      await _Admin.doc(documentSnapshot!.id).update({
-                        'Name': name,
-                        'Email': email,
-                        'Address': address,
-                        'MobileNo': phoneno,
-                        'ProfilePicture': profilepicture,
+                      await _post.doc(documentSnapshot!.id).update({
+                        'title': name,
+                        'image': profilepicture,
                       });
-
                       // Clear the text fields
                       _nameController.text = '';
-                      _emailController.text = '';
-                      _addressController.text = '';
-                      _phonenoController.text = '';
                       _profilepictureController.text = '';
 
                       // Hide the bottom sheet
@@ -114,12 +79,12 @@ class _AdminsScreenState extends State<Admins> {
         });
   }
 
-  Future<void> _deleteAdmin(String AdminId) async {
-    await _Admin.doc(AdminId).delete();
+  Future<void> _deletepost(String postId) async {
+    await _post.doc(postId).delete();
 
     // Show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('You have successfully deleted a Admin Record')));
+        content: Text('You have successfully deleted a Post')));
   }
 
   @override
@@ -138,11 +103,12 @@ class _AdminsScreenState extends State<Admins> {
               width: 500,
               height: 50,
               color: Colors.teal,
-              child: Center(child: Text("Display Admins")),
+              child:
+              Center(child: Text("Display Post")),
             ),
             CustomeSizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection('Admin').snapshots(),
+                stream: _firestore.collection('post').snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
                     final List<DocumentSnapshot> students = snapshot.data!.docs;
@@ -152,22 +118,16 @@ class _AdminsScreenState extends State<Admins> {
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
                               final DocumentSnapshot documentSnapshot =
-                                  snapshot.data!.docs[index];
+                              snapshot.data!.docs[index];
 
                               return Card(
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
-                                        "${documentSnapshot['ProfilePicture']}"),
+                                        "${documentSnapshot['image']}"),
                                     radius: 16,
                                   ),
-                                  title: Text(documentSnapshot['Name'] +
-                                      "\n" +
-                                      documentSnapshot['Email'] +
-                                      "\n" +
-                                      documentSnapshot['Address'] +
-                                      "\n" +
-                                      documentSnapshot['MobileNo']),
+                                  title: Text(documentSnapshot['title']),
                                   trailing: SizedBox(
                                     width: 100,
                                     child: Row(
@@ -176,14 +136,16 @@ class _AdminsScreenState extends State<Admins> {
                                         IconButton(
                                           icon: const Icon(Icons.edit),
                                           onPressed: () {
-                                            _updateAdmin(documentSnapshot);
+                                            _updateannouncement(
+                                                documentSnapshot);
                                           },
                                         ),
                                         // This icon button is used to delete a single product
                                         IconButton(
                                           icon: const Icon(Icons.delete),
                                           onPressed: () {
-                                            _deleteAdmin(documentSnapshot.id);
+                                            _deletepost(
+                                                documentSnapshot.id);
                                           },
                                         )
                                       ],

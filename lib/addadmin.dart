@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'mainhomescreen.dart';
 import 'drawer.dart';
 
-
 class AddAdmin extends StatefulWidget {
   const AddAdmin({Key? key}) : super(key: key);
   static String id = 'AddNewAdminScreen';
@@ -114,35 +113,34 @@ class _AddAdminState extends State<AddAdmin> {
               CustomeSizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
-                    try{
-                      final user =  FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.toString(), password: password.toString());
-                      if(user!=null){
-                        var uniqueKey =
-                        _firestore.collection('Admin').doc();
+                    try {
+                      final user = FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                              email: email.toString(),
+                              password: password.toString());
+                      if (user != null) {
+                        var uniqueKey = _firestore.collection('Admin').doc();
                         _firestore.collection('Admin').doc(uniqueKey.id).set({
                           'Name': name,
-                          'Email':email,
-                          'Address':address,
-                          'MobileNo':mobileno,
-                          'ProfilePicture':profilepicture,
-                          'ID':uniqueKey.id.toString(),
+                          'Email': email,
+                          'Address': address,
+                          'MobileNo': mobileno,
+                          'ProfilePicture': profilepicture,
+                          'ID': uniqueKey.id.toString(),
                         });
                         Navigator.pushNamed(context, MainHomeScreen.id);
-                      }else{
+                      } else {
                         print('Failed to add data');
                       }
-
-                    } on FirebaseAuthException catch  (e) {
+                    } on FirebaseAuthException catch (e) {
                       Navigator.pop(context);
                       print('Failed with error code: ${e.code}');
                       print(e.message);
                     }
-
                   },
                   child: Text('Save')),
             ]),
-          )
-      ),
+          )),
       drawer: MyDrawer(),
     );
   }

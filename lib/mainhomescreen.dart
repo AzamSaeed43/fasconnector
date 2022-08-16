@@ -17,12 +17,9 @@ class MainHomeScreen extends StatefulWidget {
 
   @override
   _MainHomeScreenState createState() => _MainHomeScreenState();
-
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +37,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               height: 50,
               color: Colors.teal,
               child: FlatButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pushNamed(context, teacher.id);
                 },
                 child: Center(
@@ -53,9 +50,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               height: 50,
               color: Colors.teal,
               child: FlatButton(
-                onPressed: (){
-                Navigator.pushNamed(context, student.id);
-              },
+                onPressed: () {
+                  Navigator.pushNamed(context, student.id);
+                },
                 child: Center(
                   child: Text("Display Current Students"),
                 ),
@@ -66,7 +63,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               height: 50,
               color: Colors.teal,
               child: FlatButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pushNamed(context, president.id);
                 },
                 child: Center(
@@ -79,7 +76,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               height: 50,
               color: Colors.teal,
               child: FlatButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pushNamed(context, alumni.id);
                 },
                 child: Center(
@@ -92,7 +89,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               height: 50,
               color: Colors.teal,
               child: FlatButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pushNamed(context, Admins.id);
                 },
                 child: Center(
@@ -105,7 +102,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               height: 50,
               color: Colors.teal,
               child: FlatButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pushNamed(context, announcement.id);
                 },
                 child: Center(

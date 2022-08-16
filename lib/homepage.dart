@@ -22,32 +22,29 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
-              children: [
-                CustomeSizedBox(height: 60),
-                Image.asset(
-                    'assets/images/NTU.png',
-                    fit: BoxFit.cover,
-                    scale: 9
-                ),
-                const Text('Welcome to NTU FAS Connector',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                CustomeSizedBox(height: 50),
-                SizedBox(
-                  width: 300,
-                  height: 50,
-                  child: ElevatedButton(onPressed: (){
+          child: Column(children: [
+            CustomeSizedBox(height: 60),
+            Image.asset('assets/images/NTU.png', fit: BoxFit.cover, scale: 9),
+            const Text(
+              'Welcome to NTU FAS Connector',
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+            CustomeSizedBox(height: 50),
+            SizedBox(
+              width: 300,
+              height: 50,
+              child: ElevatedButton(
+                  onPressed: () {
                     Navigator.pushNamed(context, LoginScreen.id);
                   },
-                      child: const Text('Login', textScaleFactor: 1.5,)
-                  ),
-                ),
-
-              ]
-          ),
+                  child: const Text(
+                    'Login',
+                    textScaleFactor: 1.5,
+                  )),
+            ),
+          ]),
         ),
       ),
     );

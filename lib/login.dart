@@ -9,7 +9,7 @@ import 'Dialog.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
   static String id = 'LoginPage';
-  static Map<String,dynamic>? user;
+  static Map<String, dynamic>? user;
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -26,61 +26,63 @@ class _LoginScreenState extends State<LoginScreen> {
     String? Admin;
     Map<String, dynamic>? dataEmail;
 
-    CollectionReference admin=FirebaseFirestore.instance.collection("Admin");
+    CollectionReference admin = FirebaseFirestore.instance.collection("Admin");
 
-    await admin.where('Email', isEqualTo: '$Email')
-        .get().then((value) => value.docs.forEach((element) {
-      print(element.data());
-      print("--------------------");
-      dataEmail=element.data() as Map<String, dynamic>?;
-      LoginScreen.user=dataEmail;
-      Admin=dataEmail?['Email'];
-      print(dataEmail?['Email']);
+    await admin
+        .where('Email', isEqualTo: '$Email')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              print(element.data());
+              print("--------------------");
+              dataEmail = element.data() as Map<String, dynamic>?;
+              LoginScreen.user = dataEmail;
+              Admin = dataEmail?['Email'];
+              print(dataEmail?['Email']);
+            }));
 
-    }));
-
-    if(Admin != null){
+    if (Admin != null) {
       print("Login ${Admin.toString()} as Admin");
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainHomeScreen()));
-    } else
-    {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MainHomeScreen()));
+    } else {
       Navigator.pop(context);
       print("Error in logining");
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error in Logining Plz Try Again"), duration: Duration(seconds: 3)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Error in Logining Plz Try Again"),
+          duration: Duration(seconds: 3)));
     }
   }
 
   void _trySubmitForm() async {
-    showDialog(context: context, builder: (c){
-      return LoadingDialog(
-        message: "Logging....",
-      );
-    });
-      try {
-        final user = await _auth.signInWithEmailAndPassword(
-            email: Email.toString(), password: Password.toString());
-        if (user != null) {
-          getData();
-
-        } else {
-          Navigator.pop(context);
-          setState(() {
-            ErrorMsg = 'Enter correct username and password';
-          });
-        }
-      } on FirebaseAuthException catch  (e) {
+    showDialog(
+        context: context,
+        builder: (c) {
+          return LoadingDialog(
+            message: "Logging....",
+          );
+        });
+    try {
+      final user = await _auth.signInWithEmailAndPassword(
+          email: Email.toString(), password: Password.toString());
+      if (user != null) {
+        getData();
+      } else {
         Navigator.pop(context);
-        print('Failed with error code: ${e.code}');
-        print(e.message);
+        setState(() {
+          ErrorMsg = 'Enter correct username and password';
+        });
       }
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      print('Failed with error code: ${e.code}');
+      print(e.message);
+    }
 
-      /*
+    /*
       Continute proccessing the provided information with your own logic
       such us sending HTTP requests, savaing to SQLite database, etc.
       */
-
   }
 
   @override

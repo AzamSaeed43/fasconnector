@@ -15,37 +15,34 @@ class teacher extends StatefulWidget {
 class _MainHomeScreenState extends State<teacher> {
   final _firestore = FirebaseFirestore.instance;
 
-
   // For Teacher
   final CollectionReference _teacher =
-  FirebaseFirestore.instance.collection('User');
+      FirebaseFirestore.instance.collection('User');
 
   Future<void> _updateTeacher(DocumentSnapshot? documentSnapshot) async {
-
     // text fields' controllers
     final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _qualificationController = TextEditingController();
+    final TextEditingController _qualificationController =
+        TextEditingController();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _addressController = TextEditingController();
-    final TextEditingController _phonenoController=TextEditingController();
+    final TextEditingController _phonenoController = TextEditingController();
     final TextEditingController _officenoController = TextEditingController();
-    final TextEditingController _positionController=TextEditingController();
+    final TextEditingController _positionController = TextEditingController();
     final TextEditingController _timetableController = TextEditingController();
-    final TextEditingController _profilepictureController=TextEditingController();
-
+    final TextEditingController _profilepictureController =
+        TextEditingController();
 
     if (documentSnapshot != null) {
-
       _nameController.text = documentSnapshot['Name'];
       _qualificationController.text = documentSnapshot['Qualification'];
       _emailController.text = documentSnapshot['Email'];
       _addressController.text = documentSnapshot['Address'];
-      _phonenoController.text=documentSnapshot['MobileNo'];
-      _officenoController.text=documentSnapshot['OfficeNo'];
-      _positionController.text=documentSnapshot['Position'];
-      _timetableController.text=documentSnapshot['TimeTable'];
-      _profilepictureController.text=documentSnapshot['ProfilePicture'];
-
+      _phonenoController.text = documentSnapshot['MobileNo'];
+      _officenoController.text = documentSnapshot['OfficeNo'];
+      _positionController.text = documentSnapshot['Position'];
+      _timetableController.text = documentSnapshot['TimeTable'];
+      _profilepictureController.text = documentSnapshot['ProfilePicture'];
     }
 
     await showModalBottomSheet(
@@ -94,7 +91,8 @@ class _MainHomeScreenState extends State<teacher> {
                 ),
                 TextField(
                   controller: _profilepictureController,
-                  decoration: const InputDecoration(labelText: 'Profile Picture'),
+                  decoration:
+                      const InputDecoration(labelText: 'Profile Picture'),
                 ),
                 TextField(
                   controller: _timetableController,
@@ -109,44 +107,47 @@ class _MainHomeScreenState extends State<teacher> {
                     final String? name = _nameController.text;
                     final String? qualification = _qualificationController.text;
                     final String? email = _emailController.text;
-                    final String? address=_addressController.text;
-                    final String? phoneno=_phonenoController.text;
-                    final String? officeno=_officenoController.text;
-                    final String? position=_positionController.text;
-                    final String? profilepicture=_profilepictureController.text;
-                    final String? timetable=_timetableController.text;
+                    final String? address = _addressController.text;
+                    final String? phoneno = _phonenoController.text;
+                    final String? officeno = _officenoController.text;
+                    final String? position = _positionController.text;
+                    final String? profilepicture =
+                        _profilepictureController.text;
+                    final String? timetable = _timetableController.text;
 
-                    if (name != null && qualification != null && email != null && address!=null && phoneno!=null
-                        && officeno!=null   && profilepicture!=null
-                         && position!=null && timetable!=null) {
-
+                    if (name != null &&
+                        qualification != null &&
+                        email != null &&
+                        address != null &&
+                        phoneno != null &&
+                        officeno != null &&
+                        profilepicture != null &&
+                        position != null &&
+                        timetable != null) {
                       // Update the product
-                      await _teacher
-                          .doc(documentSnapshot!.id)
-                          .update({'Name': name,
+                      await _teacher.doc(documentSnapshot!.id).update({
+                        'Name': name,
                         'Qualification': qualification,
-                        'Email':email,
-                        'Address':address,
-                        'MobileNo':phoneno,
-                        'OfficeNo':officeno,
-                        'Position':position,
-                        'TimeTable':timetable,
-                        'ProfilePicture':profilepicture,
-                        'UserType':'Teacher',
+                        'Email': email,
+                        'Address': address,
+                        'MobileNo': phoneno,
+                        'OfficeNo': officeno,
+                        'Position': position,
+                        'TimeTable': timetable,
+                        'ProfilePicture': profilepicture,
+                        'UserType': 'Teacher',
                       });
-
 
                       // Clear the text fields
                       _nameController.text = '';
                       _qualificationController.text = '';
                       _emailController.text = '';
-                      _addressController.text='';
-                      _phonenoController.text='';
-                      _officenoController.text='';
-                      _positionController.text='';
-                      _timetableController.text='';
-                      _profilepictureController.text='';
-
+                      _addressController.text = '';
+                      _phonenoController.text = '';
+                      _officenoController.text = '';
+                      _positionController.text = '';
+                      _timetableController.text = '';
+                      _profilepictureController.text = '';
 
                       // Hide the bottom sheet
                       Navigator.of(context).pop();
@@ -167,8 +168,6 @@ class _MainHomeScreenState extends State<teacher> {
         content: Text('You have successfully deleted a Teacher Record')));
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,30 +184,30 @@ class _MainHomeScreenState extends State<teacher> {
               width: 500,
               height: 50,
               color: Colors.teal,
-              child: Center(
-                  child: Text("Display Teachers")
-              ),
+              child: Center(child: Text("Display Teachers")),
             ),
             CustomeSizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection('User').where('UserType',isEqualTo:'Teacher').snapshots(),
+                stream: _firestore
+                    .collection('User')
+                    .where('UserType', isEqualTo: 'Teacher')
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
-                    final List<DocumentSnapshot> students =
-                        snapshot.data!.docs;
+                    final List<DocumentSnapshot> students = snapshot.data!.docs;
 
                     return Expanded(
                         child: ListView.builder(
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
-                              final DocumentSnapshot documentSnapshot = snapshot.data!.docs[index];
+                              final DocumentSnapshot documentSnapshot =
+                                  snapshot.data!.docs[index];
 
                               return Card(
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
-                                        "${documentSnapshot['ProfilePicture']}"
-                                    ),
+                                        "${documentSnapshot['ProfilePicture']}"),
                                     radius: 16,
                                   ),
                                   title: Text(documentSnapshot['Name'] +
@@ -219,9 +218,9 @@ class _MainHomeScreenState extends State<teacher> {
                                       "\n" +
                                       documentSnapshot['Address'] +
                                       "\n" +
-                                      documentSnapshot['MobileNo']+
+                                      documentSnapshot['MobileNo'] +
                                       "\n" +
-                                      documentSnapshot['OfficeNo']+
+                                      documentSnapshot['OfficeNo'] +
                                       "\n" +
                                       documentSnapshot['Position']),
                                   trailing: SizedBox(
@@ -247,9 +246,7 @@ class _MainHomeScreenState extends State<teacher> {
                                   ),
                                 ),
                               );
-                            }
-                        )
-                    );
+                            }));
                   } else {
                     return Text('Error');
                   }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'mainhomescreen.dart';
 import 'drawer.dart';
 
-
 class AddAnnoucement extends StatefulWidget {
   const AddAnnoucement({Key? key}) : super(key: key);
   static String id = 'AddNewAnnoucementScreen';
@@ -66,26 +65,27 @@ class _AddAnnoucementState extends State<AddAnnoucement> {
               CustomeSizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
-                    try{
-                        var uniqueKey =
-                        _firestore.collection('Announcement').doc();
-                        _firestore.collection('Announcement').doc(uniqueKey.id).set({
-                          'EventName': name,
-                          'EventPic':profilepicture,
-                          'ID':uniqueKey.id.toString(),
-                        });
-                        Navigator.pushNamed(context, MainHomeScreen.id);
-                      } on FirebaseAuthException catch  (e) {
+                    try {
+                      var uniqueKey =
+                          _firestore.collection('Announcement').doc();
+                      _firestore
+                          .collection('Announcement')
+                          .doc(uniqueKey.id)
+                          .set({
+                        'EventName': name,
+                        'EventPic': profilepicture,
+                        'ID': uniqueKey.id.toString(),
+                      });
+                      Navigator.pushNamed(context, MainHomeScreen.id);
+                    } on FirebaseAuthException catch (e) {
                       Navigator.pop(context);
                       print('Failed with error code: ${e.code}');
                       print(e.message);
                     }
-
                   },
                   child: Text('Save')),
             ]),
-          )
-      ),
+          )),
       drawer: MyDrawer(),
     );
   }
