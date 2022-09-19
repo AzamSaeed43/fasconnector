@@ -1,6 +1,8 @@
 # flutter_admin_web
 
-A new Flutter application.
+Admin Panel website for FAS connector.
+FAS connector is a android app for NTU students,
+alumni and teachers.
 
 ## Getting Started
 
