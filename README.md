@@ -1,18 +1,16 @@
-# flutter_admin_web
+# Flutter Admin Web
 
-Admin Panel website for FAS connector.
-FAS connector is a android app for NTU students,
-alumni and teachers.
+Faculty Alumni and Students (FAS) Connector
+
+
+## Prerequisites
+1. Must install flutter on your laptop or pc.
+2. Laptop or Pc with web browser (Recommended Chrome).
+3. High Speed Internet.
+
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Step-1: Open the project in your laptop or pc using Android Studio or Visual Studio Code.
+Step-2: Enable your Dart SDK path to the project.
+Step-3: Then run command "flutter run -d chrome --web-renderer html" in Android Studio or Visual Studio Code terminal in project directory.
